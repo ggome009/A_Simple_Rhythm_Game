@@ -1,8 +1,8 @@
 /*
- * GccApplication6.c
+ * rhythmGame.c
  *
  * Created: 3/12/2018 5:22:18 AM
- * Author : emareechan
+ * Author : Gabriel Gomez
  */ 
 
 #include <avr/io.h>
