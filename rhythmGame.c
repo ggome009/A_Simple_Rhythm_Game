@@ -92,7 +92,7 @@ unsigned char LFARR[8]={0x00,0x18,0x18,0x18,0x7E,0x3C,0x18,0x00}; //LED Matrix p
 unsigned char RTARR[8]={0x00,0x18,0x3C,0x7E,0x18,0x18,0x18,0x00}; //LED Matrix pattern for right arrow
 unsigned char DNARR[8]={0x00,0x10,0x30,0x7E,0x7E,0x30,0x10,0x00}; //LED Matrix pattern for down arrow
 unsigned char UPARR[8]={0x00,0x08,0x0C,0x7E,0x7E,0x0C,0x08,0x00}; //LED Matrix pattern for up arrow
-unsigned char DISPLAY[8]={0,0,0,0,0,0,0,0};
+unsigned char DISPLAY[8]={0,0,0,0,0,0,0,0}; //Blank pattern to be written to for gameplay
 
 unsigned char count = 0; //used for countdown state to time down before playing song
 
@@ -736,7 +736,4 @@ int main(void)
     while (1) {
 		sleep_mode();
 	}
-		
-		
-	
 }
