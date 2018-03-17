@@ -6,7 +6,7 @@ Players earn points by hitting buttons that correspond to the notes that come do
 The goal is to accumulate the most points by the end of the song.
 This project was a lot of fun to do because it's a perfect blend of 3 things that I love: video games, music, and computer science.
 
-![alt text](https://imgur.com/yzIirfA)
+![alt text](https://i.imgur.com/yzIirfA.png)
 
 An overview video of this project can be found [here](https://www.youtube.com/watch?v=D_F-ub7Tf_0)
 
