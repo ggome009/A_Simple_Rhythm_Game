@@ -1,7 +1,5 @@
 # rhythmGame_120bproject
 A simple rhythm game programmable to the Atmel ATmega1284 microcontroller.
-
-## Introduction
 Players earn points by hitting buttons that correspond to the notes that come down the note highway.
 The goal is to accumulate the most points by the end of the song.
 This project was a lot of fun to do because it's a perfect blend of 3 things that I love: video games, music, and computer science.
