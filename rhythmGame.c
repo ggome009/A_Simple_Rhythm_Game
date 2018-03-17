@@ -20,6 +20,7 @@ const unsigned char tasksNum = 7;
 const unsigned long int tasksPeriodGCD = 5; 
 task tasks[7];
 
+//for button input statemachines
 #define leftButton  ~PINA & 0x08
 #define upButton    ~PINA & 0x04
 #define downButton  ~PINA & 0x02
@@ -45,6 +46,14 @@ bool LF = False;
 bool UP = False;
 bool DN = False;
 bool RT = False;
+
+//compound inputs ie single button presses only and no input
+#define onlyRT   !LF && !UP && !DN && RT
+#define onlyLF    LF && !UP && !DN && !RT
+#define onlyDN   !LF && !UP && DN && !RT
+#define onlyUP   !LF && UP && !DN && !RT
+#define noInput  !LF && !UP && !DN && !RT
+#define anyInput LF || UP || DN || RT
 
 //used for keeping track of when new information needs to be output on LCD Screen
 //stops the LCD Screen from refreshing constantly
@@ -190,7 +199,7 @@ int LCDTick(int state) {
 			state = startScreen;
 			break;;
 		case startScreen:
-			if(!LF && !UP && !DN && RT) {
+			if(onlyRT) {
 				state = toSongSelect;
 			} else {
 				state = startScreen;
@@ -198,57 +207,57 @@ int LCDTick(int state) {
 			}
 			break;
 		case toSongSelect:
-			if(!LF && !UP && !DN && !RT) {
+			if(noInput) {
 				state = songSelect;
 				LCD_ClearScreen();
 				ScreenUpdated = False;
-			} else if (!LF && !UP && !DN && RT) {
+			} else if (onlyRT) {
 				state = toSongSelect;
 			} else {
 				state = startScreen;
 			}
 			break;
 		case toSongSelect2:
-			if(!LF && !UP && !DN && !RT) {
+			if(noInput) {
 				state = songSelect;
 				LCD_ClearScreen();
 				ScreenUpdated = False;
-			} else if (LF && !UP && !DN && !RT) {
+			} else if (onlyLF) {
 				state = toSongSelect2;
 			} else {
 				state = songOptions;
 			}
 			break;
 		case songSelect:
-			if(LF && !UP && !DN && !RT) {
+			if(onlyLF) {
 				state = toStartScreen;
-			} else if (!LF && !UP && !DN && RT) {
+			} else if (onlyRT) {
 				state = toSongOptions;
-			} else if (!LF && !UP && DN && !RT && (currentSong != EonBreak)) {
+			} else if (onlyDN && (currentSong != EonBreak)) {
 				currentSong = EonBreak;
 				state = songSelect;
 				ScreenUpdated = False;
-			} else if (!LF && UP && !DN && !RT && (currentSong != Divinity)) {
+			} else if (onlyUP && (currentSong != Divinity)) {
 				currentSong = Divinity;
 				state = songSelect;
 				ScreenUpdated = False;
 			}
 			break;
 		case toStartScreen:
-			if(!LF && !UP && !DN && !RT) {
+			if(noInput) {
 				state = startScreen;
 				LCD_ClearScreen();
 				ScreenUpdated = False; 
-			} else if(LF && !UP && !DN && !RT) {
+			} else if(onlyLF) {
 				state = toStartScreen;
 			} else {
 				state = songSelect;
 			}
 			break;
 		case songOptions:
-			if(LF && !UP && !DN && !RT) {
+			if(onlyLF) {
 				state = toSongSelect2;
-			} else if (!LF && !UP && !DN && RT) {
+			} else if (onlyRT) {
 				LCD_ClearScreen();
 				if(songOption == highScore) {
 					state = highScoreScreen;
@@ -258,18 +267,18 @@ int LCDTick(int state) {
 					PWM_on();
 					LCD_DisplayString(1, "Score: 00000");
 				}
-			} else if (!LF && !UP && DN && !RT && (songOption != highScore)) {
+			} else if (noInput && (songOption != highScore)) {
 				songOption = highScore;
 				state = songOptions;
 				ScreenUpdated = False;
-			} else if (!LF && UP && !DN && !RT && (songOption != songPlay)) {
+			} else if (noInput && (songOption != songPlay)) {
 				songOption = songPlay;
 				state = songOptions;
 				ScreenUpdated = False;
 			}
 			break;
 		case toSongOptions:
-			if(!LF && !UP && !DN && !RT) {
+			if(noInput) {
 				state = songOptions;
 				LCD_ClearScreen();
 				ScreenUpdated = False; 
@@ -290,7 +299,7 @@ int LCDTick(int state) {
 			}
 			break;
 		case toPlaySong:
-			if(!LF && !UP && !DN && !RT) {
+			if(noInput) {
 				state = countDown;
 			} else if (!LF && !UP && !DN && RT) {
 				state = toPlaySong;
@@ -309,12 +318,12 @@ int LCDTick(int state) {
 			}
 			break;
 		case displayScore:
-			if(LF || UP || DN || RT) {
+			if(anyInput) {
 				state = backHome;
 			}
 			break;
 		case backHome:
-			if(!LF && !UP && !DN && !RT) {
+			if(noInput) {
 				state = startScreen;
 				ScreenUpdated = False;
 				currentScore = 0;
@@ -324,18 +333,18 @@ int LCDTick(int state) {
 			}
 			break;
 		case highScoreScreen:
-			if(LF && !UP && !DN && !RT) {
+			if(onlyLF) {
 				state = toSongOptions2;
 			} else {
 				state = highScoreScreen;
 			}
 			break;
 		case toSongOptions2:
-			if(!LF && !UP && !DN && !RT) {
+			if(noInput) {
 				state = songOptions;
 				LCD_ClearScreen();
 				ScreenUpdated = False; 
-			} else if(LF && !UP && !DN && !RT) {
+			} else if(onlyLF) {
 				state = toSongOptions2;
 			} else {
 				state = highScoreScreen;
@@ -485,25 +494,25 @@ int LEDMatrixTick(int state) {
 		case MatrixIdle:
 			i = 0;
 			j = 0;
-			if(!LF && !UP && !DN && RT) {
+			if(onlyRT) {
 				for(unsigned char i=0;i<8;i++) {
 					ShRegWrite(128>>i);
 					ShRegWrite(~RTARR[i]);   
 					delay_ms(5);
 				}
-			} else if (LF && !UP && !DN && !RT) {
+			} else if (onlyLF) {
 				for(unsigned char i=0;i<8;i++) {
 					ShRegWrite(128>>i);
 					ShRegWrite(~LFARR[i]);   
 					delay_ms(5);
 				}
-			} else if (!LF && !UP && DN && !RT) {
+			} else if (onlyDN) {
 				for(unsigned char i=0;i<8;i++) {
 					ShRegWrite(128>>i);
 					ShRegWrite(~DNARR[i]);   
 					delay_ms(5);
 				}
-			}  else if (!LF && UP && !DN && !RT) {
+			}  else if (onlyUP) {
 				for(unsigned char i=0;i<8;i++) {
 					ShRegWrite(128>>i);
 					ShRegWrite(~UPARR[i]);   
