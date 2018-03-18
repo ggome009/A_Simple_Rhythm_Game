@@ -267,11 +267,11 @@ int LCDTick(int state) {
 					PWM_on();
 					LCD_DisplayString(1, "Score: 00000");
 				}
-			} else if (noInput && (songOption != highScore)) {
+			} else if (onlyDN && (songOption != highScore)) {
 				songOption = highScore;
 				state = songOptions;
 				ScreenUpdated = False;
-			} else if (noInput && (songOption != songPlay)) {
+			} else if (onlyUP && (songOption != songPlay)) {
 				songOption = songPlay;
 				state = songOptions;
 				ScreenUpdated = False;
@@ -282,7 +282,7 @@ int LCDTick(int state) {
 				state = songOptions;
 				LCD_ClearScreen();
 				ScreenUpdated = False; 
-			} else if(!LF && !UP && !DN && RT) {
+			} else if(onlyRT) {
 				state = toSongOptions;
 			} else {
 				state = songSelect;
