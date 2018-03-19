@@ -301,7 +301,7 @@ int LCDTick(int state) {
 		case toPlaySong:
 			if(noInput) {
 				state = countDown;
-			} else if (!LF && !UP && !DN && RT) {
+			} else if (onlyRT) {
 				state = toPlaySong;
 			} else {
 				state = songOptions;
@@ -320,6 +320,8 @@ int LCDTick(int state) {
 		case displayScore:
 			if(anyInput) {
 				state = backHome;
+			} else {
+				state = displayScore;
 			}
 			break;
 		case backHome:
@@ -530,7 +532,7 @@ int LEDMatrixTick(int state) {
 			}
 			
 			if (i < songs[currentSong].times[noteCount]) {
-				unsigned char noteTarget = songs[currentSong].press[noteCount];
+				noteTarget = songs[currentSong].press[noteCount];
 				
 				if (noteTarget == 1) {
 					DISPLAY[0] |= 1;
@@ -547,10 +549,7 @@ int LEDMatrixTick(int state) {
 				}
 				++i;
 			} else {
-				
 				if (j < songs[currentSong].rests[noteCount]) {
-					
-					
 					++j;
 				} else {
 					i = 0;
@@ -563,8 +562,6 @@ int LEDMatrixTick(int state) {
 				ShRegWrite(~DISPLAY[i]);
 				delay_ms(5);
 			}
-			
-			
 			break;
 	}	// End State Actions
 	
@@ -582,7 +579,6 @@ int noteSetTick(int state) {
 			state = wait4Play;
 			break;
 		case wait4Play:
-			songEnd = False;
 			state = play ? playNotes : wait4Play;
 			break;
 		case playNotes:
@@ -597,6 +593,7 @@ int noteSetTick(int state) {
 		case wait4Play:
 			i = 0;
 			j = 0;
+			songEnd = False;
 			break;
 		case playNotes:
 		
@@ -610,7 +607,6 @@ int noteSetTick(int state) {
 				} else {
 					scoreChanged = False;
 				}
-				
 				++i;
 			} else {
 				noteTarget = 0x00;
